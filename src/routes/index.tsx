@@ -6,7 +6,8 @@ import {
   NotFoundRoute,
 } from "@tanstack/react-router";
 import { Suspense, lazy } from "react";
-import { Landing } from "../features/misc";
+import { Landing } from "@/features/misc";
+import { AuthRoute } from "@/features/auth";
 
 // eslint-disable-next-line react-refresh/only-export-components
 const TanStackRouterDevtools = import.meta.env.DEV
@@ -34,7 +35,19 @@ const indexRoute = new Route({
   component: () => <Landing />,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute]);
+const authRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "/auth",
+  component: () => <AuthRoute/>,
+})
+
+const homeRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "/home",
+  component: () => <h1>home</h1>
+})
+
+const routeTree = rootRoute.addChildren([indexRoute, authRoute, homeRoute]);
 
 const notFoundRoute = new NotFoundRoute({
   getParentRoute: () => rootRoute,
