@@ -11,6 +11,7 @@ import { Landing } from "@/features/misc";
 import { AuthRoute } from "@/features/auth";
 import { isAuthenticated } from "@/utils";
 import { Home } from "./Home";
+import { Space } from "./Space";
 
 // eslint-disable-next-line react-refresh/only-export-components
 const TanStackRouterDevtools = import.meta.env.DEV
@@ -41,26 +42,42 @@ const indexRoute = new Route({
 const authRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "/auth",
-  beforeLoad: async() => {
-    if(await isAuthenticated()) {
-      throw redirect({to: "/home"})
+  beforeLoad: async () => {
+    if (await isAuthenticated()) {
+      throw redirect({ to: "/home" });
     }
   },
-  component: () => <AuthRoute/>,
-})
+  component: () => <AuthRoute />,
+});
 
 const homeRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "/home",
-  beforeLoad: async() =>{
-    if(!await isAuthenticated()){
-      throw redirect({to: "/"})
+  beforeLoad: async () => {
+    if (!(await isAuthenticated())) {
+      throw redirect({ to: "/" });
     }
   },
-  component: () => <Home/>
-})
+  component: () => <Outlet />,
+});
 
-const routeTree = rootRoute.addChildren([indexRoute, authRoute, homeRoute]);
+const homeIndexRoute = new Route({
+  getParentRoute: () => homeRoute,
+  path: "/",
+  component: () => <Home />,
+});
+
+const spaceRoute = new Route({
+  getParentRoute: () => homeRoute,
+  path: "/space",
+  component: () => <Space />,
+});
+
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  authRoute,
+  homeRoute.addChildren([homeIndexRoute, spaceRoute]),
+]);
 
 const notFoundRoute = new NotFoundRoute({
   getParentRoute: () => rootRoute,

@@ -1,0 +1,6 @@
+.container {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: var(--mantine-color-blue-light);
+  max-width: 30rem;
+}

@@ -1,8 +1,9 @@
 import { useGlobalContext } from "@/context";
 import { createSpace, getSpaces } from "@/features/space";
-import { Button, Modal, Stack, TextInput } from "@mantine/core";
+import { Button, Modal, Paper, Stack, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 export function Home() {
@@ -11,6 +12,7 @@ export function Home() {
     queryKey: ["spaces", user],
     queryFn: getSpaces,
   });
+  const navigate = useNavigate({ from: "/home" });
 
   const [name, setName] = useState("");
   const [opened, { open, close }] = useDisclosure(false);
@@ -25,7 +27,7 @@ export function Home() {
   };
 
   return (
-    <>
+    <div>
       <Button onClick={open}>new space</Button>
       <Modal opened={opened} onClose={close} centered title="New Space">
         <Stack>
@@ -40,9 +42,22 @@ export function Home() {
 
       <Stack>
         {query.data?.map((space) => (
-          <div key={space.id}>{space.name}</div>
+          <Paper
+            radius="lg"
+            p="md"
+            withBorder
+            key={space.id}
+            onClick={() =>
+              navigate({
+                to: "/home/space",
+                search: { id: space.id, name: space.name },
+              })
+            }
+          >
+            {space.name}
+          </Paper>
         ))}
       </Stack>
-    </>
+    </div>
   );
 }

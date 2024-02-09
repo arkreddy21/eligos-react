@@ -28,18 +28,18 @@ export function AuthRoute() {
     if (type === "Login") {
       try {
         await login({ email, password });
-        navigate({ to: "/home" });
+        navigate({ to: "/spaces" });
       } catch (err) {
-        setError(err.message);
+        if (err instanceof Error) setError(err.message);
         loader.close();
       }
     } else {
       try {
         await register({ name, email, password });
         await login({ email, password });
-        navigate({ to: "/home" });
+        navigate({ to: "/spaces" });
       } catch (err) {
-        setError(err.message);
+        if (err instanceof Error) setError(err.message);
         loader.close();
       }
     }
