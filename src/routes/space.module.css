@@ -2,10 +2,44 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  width: 100%;
   padding: 1rem;
 }
 
 .content {
   flex: 1;
   overflow: auto;
+}
+
+.layout {
+  display: flex;
+  height: 100vh;
+}
+
+.layout > main {
+  @mixin smaller-than $mantine-breakpoint-md {
+    display: none;
+  }
+}
+
+.dynamic {
+  width: 100%;
+}
+
+.dynamic main {
+  @mixin larger-than $mantine-breakpoint-md {
+    display: none;
+  }
+}
+
+.dynamic .ghost {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 100%;
+  @mixin smaller-than $mantine-breakpoint-md {
+    display: none;
+  }
 }
