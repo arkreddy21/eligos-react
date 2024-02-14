@@ -5,8 +5,8 @@ import classes from "./space.module.css";
 
 export const Route = createFileRoute("/spaces")({
   component: SpacesRoot,
-  beforeLoad: async () => {
-    if (!(await isAuthenticated())) {
+  beforeLoad: async ({ context }) => {
+    if (!context.user && !(await isAuthenticated())) {
       throw redirect({ to: "/" });
     }
   },

@@ -1,14 +1,10 @@
 import React, { useState, createContext, useContext, useEffect } from "react";
 import { getUser } from "./utils";
 
-const AppContext = createContext<{
-  user: User;
-}>({
-  user: { id: "", name: "", email: "" },
-});
+const AppContext = createContext<{ user: User | undefined }>(undefined!);
 
 const AppProvider: React.FC<{ children: JSX.Element }> = ({ children }) => {
-  const [user, setUser] = useState<User>({ id: "", name: "", email: "" });
+  const [user, setUser] = useState<User | undefined>();
 
   const loadUser = async () => {
     try {
