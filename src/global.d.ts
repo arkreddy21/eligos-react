@@ -11,6 +11,7 @@ interface Space {
 }
 
 interface Message {
+  id: string;
   userid: string;
   spaceid: string;
   body: string;

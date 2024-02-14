@@ -23,3 +23,16 @@ export async function getSpaces() {
     throw new Error("Something went wrong. Try again");
   }
 }
+
+export async function getMessages(spaceid: string) {
+  const params = new URLSearchParams({ spaceid })
+  try{
+    const res = await api.get("space/messages", {searchParams: params}).json();
+    return res as Array<Message>;
+  } catch (err) {
+    if (err instanceof HTTPError) {
+      throw new Error(await err.response.text());
+    }
+    throw new Error("Something went wrong. Try again");
+  }
+}

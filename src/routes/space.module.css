@@ -4,11 +4,24 @@
   height: 100vh;
   width: 100%;
   padding: 1rem;
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
 }
 
-.content {
+.chats {
   flex: 1;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.footer > div {
+  flex: 1;
 }
 
 .layout {
@@ -42,4 +55,5 @@
   @mixin smaller-than $mantine-breakpoint-md {
     display: none;
   }
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
 }
