@@ -4,6 +4,7 @@ import { MantineProvider } from "@mantine/core";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/reactQuery";
 import { AppProvider, useGlobalContext } from "./context";
+import { WsProvider } from "./websocketContext";
 
 const router = createRouter({ routeTree, context: { user: undefined! } });
 
@@ -23,7 +24,9 @@ function App() {
     <MantineProvider defaultColorScheme="auto">
       <AppProvider>
         <QueryClientProvider client={queryClient}>
-          <RouterWithContext />
+          <WsProvider>
+            <RouterWithContext />
+          </WsProvider>
         </QueryClientProvider>
       </AppProvider>
     </MantineProvider>

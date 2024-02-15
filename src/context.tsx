@@ -16,6 +16,7 @@ const AppProvider: React.FC<{ children: JSX.Element }> = ({ children }) => {
     }
   };
 
+  // TODO: use hooks to store token and run this after login
   useEffect(() => {
     loadUser();
   }, []);
@@ -35,4 +36,5 @@ const useGlobalContext = () => {
   return useContext(AppContext);
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { AppProvider, useGlobalContext };
