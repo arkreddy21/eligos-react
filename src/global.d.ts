@@ -17,3 +17,7 @@ interface Message {
   body: string;
   createdAt: string;
 }
+
+interface MessageWUser extends Message {
+  user: User;
+}

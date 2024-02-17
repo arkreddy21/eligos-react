@@ -28,7 +28,7 @@ export async function getMessages(spaceid: string) {
   const params = new URLSearchParams({ spaceid })
   try{
     const res = await api.get("space/messages", {searchParams: params}).json();
-    return res as Array<Message>;
+    return res as Array<MessageWUser>;
   } catch (err) {
     if (err instanceof HTTPError) {
       throw new Error(await err.response.text());
