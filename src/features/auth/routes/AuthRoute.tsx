@@ -11,8 +11,10 @@ import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { login, register } from "../api/auth";
 import classes from "./auth.module.css";
+import { useGlobalContext } from "@/context";
 
 export function AuthRoute() {
+  const {setToken} = useGlobalContext();
   const [type, toggle] = useToggle(["Login", "Register"]);
   const [loading, loader] = useDisclosure(false);
   const [error, setError] = useState("");
@@ -27,7 +29,8 @@ export function AuthRoute() {
     loader.open();
     if (type === "Login") {
       try {
-        await login({ email, password });
+        const token = await login({ email, password });
+        setToken(token);
         navigate({ to: "/spaces" });
       } catch (err) {
         if (err instanceof Error) setError(err.message);
@@ -36,7 +39,8 @@ export function AuthRoute() {
     } else {
       try {
         await register({ name, email, password });
-        await login({ email, password });
+        const token = await login({ email, password });
+        setToken(token);
         navigate({ to: "/spaces" });
       } catch (err) {
         if (err instanceof Error) setError(err.message);

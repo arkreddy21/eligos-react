@@ -7,29 +7,31 @@ const WsContext = createContext<{ websocket: WebSocket | undefined }>(
 );
 
 const WsProvider: React.FC<{ children: JSX.Element }> = ({ children }) => {
-  const { user } = useGlobalContext();
+  const { user, token } = useGlobalContext();
   const queryClient = useQueryClient();
   const wsRef = useRef<WebSocket | undefined>();
 
   useEffect(() => {
-    if (user) {
-      wsRef.current = new WebSocket(
-        `${import.meta.env.VITE_WS_URL}?token=${localStorage.getItem("token")}`
-      );
-      wsRef.current.onopen = () => {
-        console.log("ws connected");
-      };
-      wsRef.current.onmessage = (event) => {
-        console.log(event);
-        const data = JSON.parse(event.data) as Message;
-        console.log(data);
-        queryClient.invalidateQueries({ queryKey: ["messages", data.spaceid] });
-      };
-      return () => {
-        wsRef.current?.close();
-      };
+    if (!user) {
+      return;
     }
-  }, [user, queryClient]);
+    wsRef.current = new WebSocket(
+      `${import.meta.env.VITE_WS_URL}?token=${token}`
+    );
+    wsRef.current.onopen = () => {
+      console.log("ws connected");
+    };
+    wsRef.current.onmessage = (event) => {
+      console.log(event);
+      const data = JSON.parse(event.data) as Message;
+      console.log(data);
+      queryClient.invalidateQueries({ queryKey: ["messages", data.spaceid] });
+    };
+    return () => {
+      wsRef.current?.close();
+    };
+  }, [user, token, queryClient]);
+
   return (
     <WsContext.Provider value={{ websocket: wsRef.current }}>
       {children}

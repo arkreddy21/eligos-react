@@ -17,7 +17,7 @@ export async function login(user: LoginUser) {
   formData.set("password", user.password);
   try {
     const res: {token:string} = await api.post("auth/login", { body: formData }).json();
-    localStorage.setItem("token", res.token)
+    return res.token
   } catch (err) {
     if (err instanceof HTTPError) {
       throw new Error(await err.response.text())

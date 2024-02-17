@@ -6,7 +6,8 @@ export const api = ky.extend({
   hooks: {
     beforeRequest: [
       request => {
-        request.headers.set("Authorization", `Bearer ${localStorage.getItem("token")}`);
+        // token need to be sliced as it is serialized as json via mantine hook
+        request.headers.set("Authorization", `Bearer ${localStorage.getItem("token")?.slice(1,-1)}`);
       }
     ]
   },
