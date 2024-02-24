@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useGlobalContext } from "./context";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -9,31 +9,37 @@ const WsContext = createContext<{ websocket: WebSocket | undefined }>(
 const WsProvider: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const { user, token } = useGlobalContext();
   const queryClient = useQueryClient();
-  const wsRef = useRef<WebSocket | undefined>();
+  const [websocket, setWebsocket] = useState<WebSocket | undefined>();
 
   useEffect(() => {
     if (!user) {
       return;
     }
-    wsRef.current = new WebSocket(
+    const ws = new WebSocket(
       `${import.meta.env.VITE_WS_URL}?token=${token}`
     );
-    wsRef.current.onopen = () => {
+    ws.onopen = () => {
       console.log("ws connected");
     };
-    wsRef.current.onmessage = (event) => {
-      console.log(event);
+    ws.onmessage = (event) => {
       const data = JSON.parse(event.data) as Message;
-      console.log(data);
-      queryClient.invalidateQueries({ queryKey: ["messages", data.spaceid] });
+      // queryClient.invalidateQueries({ queryKey: ["messages", data.spaceid] });
+      queryClient.setQueryData(["messages", data.spaceid], (oldData: any)=>{
+        return [...oldData, data];
+      })
     };
+    ws.onclose = () => {
+      console.log("ws closed");
+    }
+    setWebsocket(ws);
     return () => {
-      wsRef.current?.close();
+      ws.close();
+      setWebsocket(undefined);
     };
   }, [user, token, queryClient]);
 
   return (
-    <WsContext.Provider value={{ websocket: wsRef.current }}>
+    <WsContext.Provider value={{ websocket: websocket }}>
       {children}
     </WsContext.Provider>
   );

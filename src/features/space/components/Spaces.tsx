@@ -1,11 +1,21 @@
 import { useGlobalContext } from "@/context";
 import { createSpace, getSpaces } from "@/features/space";
-import { Button, Modal, Paper, Stack, TextInput } from "@mantine/core";
+import {
+  Button,
+  Modal,
+  Paper,
+  Stack,
+  TextInput,
+  Text,
+  Menu,
+  ActionIcon,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import classes from "./spaces.module.css"
+import classes from "./spaces.module.css";
+import { DotsThreeOutlineVertical, Gear, Plus } from "@phosphor-icons/react";
 
 export function Spaces() {
   const { user } = useGlobalContext();
@@ -20,7 +30,7 @@ export function Spaces() {
 
   const handleCreateSpace = async () => {
     try {
-      await createSpace(name, user.id);
+      user && (await createSpace(name, user.id));
     } catch {
       console.log("unable to create space");
     }
@@ -28,8 +38,28 @@ export function Spaces() {
   };
 
   return (
-    <main className={classes.container} >
-      <Button onClick={open}>new space</Button>
+    <main className={classes.container}>
+      <div className={classes.header}>
+        <Text fw={700} >Eligos</Text>
+        <Menu
+          position="bottom-end"
+          transitionProps={{ transition: "pop-top-right", duration: 150 }}
+        >
+          <Menu.Target>
+            <ActionIcon variant="transparent">
+              <DotsThreeOutlineVertical weight="fill" />
+            </ActionIcon>
+          </Menu.Target>
+
+          <Menu.Dropdown>
+            <Menu.Item leftSection={<Plus weight="bold" />} onClick={open}>
+              new space
+            </Menu.Item>
+            <Menu.Item leftSection={<Gear weight="bold" />}>settings</Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+      </div>
+
       <Modal opened={opened} onClose={close} centered title="New Space">
         <Stack>
           <TextInput
@@ -44,7 +74,7 @@ export function Spaces() {
       <Stack>
         {query.data?.map((space) => (
           <Paper
-            radius="lg"
+            radius="md"
             p="md"
             withBorder
             key={space.id}

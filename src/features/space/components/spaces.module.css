@@ -1,5 +1,15 @@
 .container {
   height: 100vh;
   min-width: 20rem;
-  padding: 1rem;
+  padding: var(--mantine-spacing-md);
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: var(--mantine-spacing-xs);
+  margin-block-end: 1rem;
+  background-color: var(--mantine-primary-color-light);
+  border-radius: var(--mantine-radius-md);
 }

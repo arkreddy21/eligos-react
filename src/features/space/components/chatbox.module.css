@@ -1,6 +1,5 @@
 .container {
-  padding: 0.5rem;
-  border-radius: 0.5rem;
+  padding: var(--mantine-spacing-xs);
+  border-radius: var(--mantine-radius-md);
   background-color: var(--mantine-color-blue-light);
-  max-width: 30rem;
 }
