@@ -22,11 +22,14 @@ const WsProvider: React.FC<{ children: JSX.Element }> = ({ children }) => {
       console.log("ws connected");
     };
     ws.onmessage = (event) => {
-      const data = JSON.parse(event.data) as Message;
-      // queryClient.invalidateQueries({ queryKey: ["messages", data.spaceid] });
-      queryClient.setQueryData(["messages", data.spaceid], (oldData: any)=>{
-        return [...oldData, data];
-      })
+      const data = JSON.parse(event.data) as WsMessage;
+      if(data.proto === "message") {
+        // queryClient.invalidateQueries({ queryKey: ["messages", data.spaceid] });
+        queryClient.setQueryData(["messages", data.spaceid], (oldData: any)=>{
+          return [...oldData, data.payload];
+        })
+      }
+      
     };
     ws.onclose = () => {
       console.log("ws closed");

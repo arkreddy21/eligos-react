@@ -31,14 +31,20 @@ function Space() {
   const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (text === "" || !user) return;
-    const m = {
-      userid: user.id,
+    const m: WsMessage = {
+      proto: "message",
       spaceid,
-      body: text,
+      payload: {
+        userid: user.id,
+        spaceid,
+        body: text,
+        user: user,
+      },
     };
     if (websocket?.readyState === 1) {
       websocket?.send(JSON.stringify(m));
     }
+    setText("");
   };
 
   return (
@@ -49,7 +55,11 @@ function Space() {
           <ChatBox key={message.id} message={message} />
         ))}
       </div>
-      <form autoComplete="off" className={classes.footer} onSubmit={handleSendMessage}>
+      <form
+        autoComplete="off"
+        className={classes.footer}
+        onSubmit={handleSendMessage}
+      >
         <TextInput
           radius="md"
           value={text}

@@ -1,4 +1,3 @@
-
 interface User {
   id: string;
   name: string;
@@ -20,4 +19,10 @@ interface Message {
 
 interface MessageWUser extends Message {
   user: User;
+}
+
+interface WsMessage {
+  proto: string;
+  spaceid: string;
+  payload: unknown;
 }
