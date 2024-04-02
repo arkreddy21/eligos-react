@@ -25,10 +25,56 @@ export async function getSpaces() {
 }
 
 export async function getMessages(spaceid: string) {
-  const params = new URLSearchParams({ spaceid })
-  try{
-    const res = await api.get("space/messages", {searchParams: params}).json();
+  try {
+    const res = await api
+      .get("space/messages", { searchParams: {spaceid} })
+      .json();
     return res as Array<MessageWUser>;
+  } catch (err) {
+    if (err instanceof HTTPError) {
+      throw new Error(await err.response.text());
+    }
+    throw new Error("Something went wrong. Try again");
+  }
+}
+
+export async function inviteUser(spaceid: string, spaceName: string, email: string) {
+  try {
+    await api.post("invite/create", { json: { spaceid, spaceName, email } });
+  } catch (err) {
+    if (err instanceof HTTPError) {
+      throw new Error(await err.response.text());
+    }
+    throw new Error("Something went wrong. Try again");
+  }
+}
+
+export async function getInvites(email: string) {
+  try {
+    const res = await api.get("invite/get", { searchParams: { email } }).json();
+    return res as Array<Invite>;
+  } catch (err) {
+    if (err instanceof HTTPError) {
+      throw new Error(await err.response.text());
+    }
+    throw new Error("Something went wrong. Try again");
+  }
+}
+
+export async function acceptInvite(invite: Invite) {
+  try {
+    await api.post("invite/accept", { json: invite });
+  } catch (err) {
+    if (err instanceof HTTPError) {
+      throw new Error(await err.response.text());
+    }
+    throw new Error("Something went wrong. Try again");
+  }
+}
+
+export async function rejectInvite(invite: Invite) {
+  try {
+    await api.post("invite/reject", { json: invite });
   } catch (err) {
     if (err instanceof HTTPError) {
       throw new Error(await err.response.text());

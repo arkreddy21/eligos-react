@@ -26,3 +26,10 @@ interface WsMessage {
   spaceid: string;
   payload: unknown;
 }
+
+interface Invite {
+  id: string;
+  spaceid: string;
+  spaceName: string;
+  email: string;
+}

@@ -1,0 +1,10 @@
+.container {
+  padding: var(--mantine-spacing-md);
+}
+
+.card {
+  padding: var(--mantine-spacing-md);
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));;
+  border-radius: var(--mantine-radius-md);
+  max-width: 40rem;
+}

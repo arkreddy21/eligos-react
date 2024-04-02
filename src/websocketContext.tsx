@@ -12,9 +12,8 @@ const WsProvider: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const [websocket, setWebsocket] = useState<WebSocket | undefined>();
 
   useEffect(() => {
-    if (!user) {
-      return;
-    }
+    if (!user) return;
+    
     const ws = new WebSocket(
       `${import.meta.env.VITE_WS_URL}?token=${token}`
     );
@@ -22,14 +21,20 @@ const WsProvider: React.FC<{ children: JSX.Element }> = ({ children }) => {
       console.log("ws connected");
     };
     ws.onmessage = (event) => {
-      const data = JSON.parse(event.data) as WsMessage;
+      const data = JSON.parse(event.data);
       if(data.proto === "message") {
         // queryClient.invalidateQueries({ queryKey: ["messages", data.spaceid] });
         queryClient.setQueryData(["messages", data.spaceid], (oldData: any)=>{
+          if (!oldData) return [data.payload];
           return [...oldData, data.payload];
         })
       }
-      
+      if(data.proto === "invite") {
+        queryClient.setQueryData(["invites", user.email], (oldData: any)=>{
+          if (!oldData) return [data.payload];
+          return [...oldData, data.payload];
+        })
+      }
     };
     ws.onclose = () => {
       console.log("ws closed");

@@ -1,6 +1,6 @@
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
-import { MantineProvider } from "@mantine/core";
+import { MantineProvider, TextInput, createTheme } from "@mantine/core";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/reactQuery";
 import { AppProvider, useGlobalContext } from "./context";
@@ -19,9 +19,19 @@ function RouterWithContext() {
   return <RouterProvider router={router} context={{ user }} />;
 }
 
+const theme = createTheme({
+  components: {
+    TextInput: TextInput.extend({
+      defaultProps: {
+        radius: "md",
+      }
+    })
+  }
+})
+
 function App() {
   return (
-    <MantineProvider defaultColorScheme="auto">
+    <MantineProvider theme={theme} defaultColorScheme="auto">
       <AppProvider>
         <QueryClientProvider client={queryClient}>
           <WsProvider>

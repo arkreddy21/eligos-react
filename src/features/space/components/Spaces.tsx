@@ -12,10 +12,15 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useNavigate } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import classes from "./spaces.module.css";
-import { DotsThreeOutlineVertical, Gear, Plus } from "@phosphor-icons/react";
+import {
+  DotsThreeOutlineVertical,
+  Gear,
+  Plus,
+  Notification,
+} from "@phosphor-icons/react";
 
 export function Spaces() {
   const { user } = useGlobalContext();
@@ -23,6 +28,7 @@ export function Spaces() {
     queryKey: ["spaces", user],
     queryFn: getSpaces,
   });
+  const queryClient = useQueryClient();
   const navigate = useNavigate({ from: "/spaces" });
 
   const [name, setName] = useState("");
@@ -30,7 +36,9 @@ export function Spaces() {
 
   const handleCreateSpace = async () => {
     try {
-      user && (await createSpace(name, user.id));
+      if (!user) return;
+      await createSpace(name, user.id);
+      queryClient.invalidateQueries({ queryKey: ["spaces", user] });
     } catch {
       console.log("unable to create space");
     }
@@ -40,7 +48,7 @@ export function Spaces() {
   return (
     <main className={classes.container}>
       <div className={classes.header}>
-        <Text fw={700} >Eligos</Text>
+        <Text fw={700}>Eligos</Text>
         <Menu
           position="bottom-end"
           transitionProps={{ transition: "pop-top-right", duration: 150 }}
@@ -54,6 +62,12 @@ export function Spaces() {
           <Menu.Dropdown>
             <Menu.Item leftSection={<Plus weight="bold" />} onClick={open}>
               new space
+            </Menu.Item>
+            <Menu.Item
+              leftSection={<Notification weight="bold" />}
+              onClick={() => navigate({ to: "/notifications" })}
+            >
+              notifications
             </Menu.Item>
             <Menu.Item leftSection={<Gear weight="bold" />}>settings</Menu.Item>
           </Menu.Dropdown>

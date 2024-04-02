@@ -14,6 +14,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as SpacesImport } from './routes/spaces'
+import { Route as NotificationsImport } from './routes/notifications'
 import { Route as AuthImport } from './routes/auth'
 import { Route as SpacesIndexImport } from './routes/spaces.index'
 import { Route as SpacesSpaceidImport } from './routes/spaces.$spaceid'
@@ -26,6 +27,11 @@ const IndexLazyImport = createFileRoute('/')()
 
 const SpacesRoute = SpacesImport.update({
   path: '/spaces',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const NotificationsRoute = NotificationsImport.update({
+  path: '/notifications',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -61,6 +67,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthImport
       parentRoute: typeof rootRoute
     }
+    '/notifications': {
+      preLoaderRoute: typeof NotificationsImport
+      parentRoute: typeof rootRoute
+    }
     '/spaces': {
       preLoaderRoute: typeof SpacesImport
       parentRoute: typeof rootRoute
@@ -81,6 +91,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
   AuthRoute,
+  NotificationsRoute,
   SpacesRoute.addChildren([SpacesSpaceidRoute, SpacesIndexRoute]),
 ])
 
